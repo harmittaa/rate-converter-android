@@ -12,7 +12,7 @@ class RatesParser : JsonDeserializer<Rate> {
         val jsonResponse = json!!.asJsonObject!!
         val ratesObject = jsonResponse.getAsJsonObject("rates")
         val rateEntries = ratesObject.entrySet()
-        val simpleRates = rateEntries.map { rate -> SingleRate(code = rate.key, value = rate.value.asDouble) }
+        val simpleRates = rateEntries.map { rate -> SingleRate(code = rate.key, exchangeRate = rate.value.asDouble) }
         return Rate(base = jsonResponse.get("base").asString, date = jsonResponse.get("date").asString, rates = simpleRates)
     }
 }

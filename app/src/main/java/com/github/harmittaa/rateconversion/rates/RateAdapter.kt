@@ -1,20 +1,36 @@
 package com.github.harmittaa.rateconversion.rates
 
+import android.text.Editable
+import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.github.harmittaa.rateconversion.R
 import com.github.harmittaa.rateconversion.model.SingleRate
 
-class RateAdapter(var list: List<SingleRate>) : RecyclerView.Adapter<RateAdapter.ViewHolder>() {
+interface RateRowListener {
+    fun onInputChanged(newInput: Double, onRow: Int)
+    fun onRowFocused(row: Int)
+}
 
+interface FocusableListener {
+    fun onEditTextFocused(row: Int)
+}
+
+class RateAdapter(var list: List<SingleRate>) : RecyclerView.Adapter<RateAdapter.ViewHolder>(),
+    TextWatcher, FocusableListener {
+    lateinit var listener: RateRowListener
+    private var currentClickedRow = 0
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val row = LayoutInflater.from(parent.context)
             .inflate(R.layout.rate_row, parent, false) as View
-        return ViewHolder(row)
+        return ViewHolder(row, this, this)
     }
 
     override fun getItemCount() = list.count()
@@ -25,12 +41,39 @@ class RateAdapter(var list: List<SingleRate>) : RecyclerView.Adapter<RateAdapter
     }
 
 
-    class ViewHolder(private val item: View) : RecyclerView.ViewHolder(item) {
-        private val code: TextView = item.findViewById(R.id.currencyCode)
-        private val name: TextView = item.findViewById(R.id.currencyName)
+    class ViewHolder(row: View, private var listener: TextWatcher, private var focusableListener: FocusableListener) : RecyclerView.ViewHolder(row) {
+        private val code: TextView = row.findViewById(R.id.currencyCode)
+        private val name: TextView = row.findViewById(R.id.currencyName)
+        private val input: EditText = row.findViewById(R.id.currencyInput)
+
         fun setItem(item: SingleRate) {
             code.text = item.code
-            name.text = "Full name"
+            name.text = item.exchangeRate.toString()
+            input.hint = item.exchangedValue.toString()
+            input.addTextChangedListener(listener)
+            input.setOnFocusChangeListener { view, b ->
+                Log.d("TEST", "test")
+                focusableListener.onEditTextFocused(adapterPosition)
+            }
         }
+    }
+
+    override fun afterTextChanged(editable: Editable?) {
+        if (editable.isNullOrBlank()) return
+        listener.onInputChanged(editable.toString().toDouble(), currentClickedRow)
+    }
+
+    override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+    }
+
+    override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+        //
+    }
+
+    override fun onEditTextFocused(row: Int) {
+        if (currentClickedRow == row) return
+        currentClickedRow = row
+        listener.onRowFocused(row)
+
     }
 }

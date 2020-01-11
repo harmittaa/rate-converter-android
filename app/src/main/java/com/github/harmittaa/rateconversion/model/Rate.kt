@@ -6,4 +6,4 @@ data class Rate(
     var rates: List<SingleRate>
 )
 
-data class SingleRate(val code: String, val value: Double)
+data class SingleRate(val code: String, var exchangeRate: Double, var exchangedValue: Double = 0.0)

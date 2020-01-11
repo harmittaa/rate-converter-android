@@ -1,7 +1,6 @@
 package com.github.harmittaa.rateconversion.rates
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,8 +11,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.harmittaa.rateconversion.R
 import com.github.harmittaa.rateconversion.model.Rate
 import com.github.harmittaa.rateconversion.model.SingleRate
-import com.google.gson.GsonBuilder
 import kotlinx.android.synthetic.main.fragment_rate.*
+import kotlin.random.Random
 
 class RateFragment : Fragment() {
 
@@ -30,16 +29,16 @@ class RateFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        rateAdapter.listener = viewModel
         ratesList.apply {
             layoutManager = LinearLayoutManager(this@RateFragment.context)
             adapter = rateAdapter
         }
-        viewModel.getRates("EUR")
+        viewModel.getRates()
     }
 
-    private val ratesObserver = Observer<Rate> {
-        Log.d("THIS", it.date)
-        rateAdapter.list = it.rates
+    private val ratesObserver = Observer<List<SingleRate>> {
+        rateAdapter.list = it
         rateAdapter.notifyDataSetChanged()
     }
 }
