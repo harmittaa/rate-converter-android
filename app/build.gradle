@@ -41,6 +41,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$rootProject.viewmodelktx"
     implementation "androidx.lifecycle:lifecycle-extensions:$rootProject.viewmodelktx"
 
+    implementation "androidx.recyclerview:recyclerview:$appCompat"
 
 
 
