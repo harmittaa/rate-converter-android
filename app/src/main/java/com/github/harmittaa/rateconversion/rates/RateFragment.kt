@@ -11,19 +11,17 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.harmittaa.rateconversion.R
 import com.github.harmittaa.rateconversion.model.Rate
+import com.github.harmittaa.rateconversion.model.SingleRate
+import com.google.gson.GsonBuilder
 import kotlinx.android.synthetic.main.fragment_rate.*
 
 class RateFragment : Fragment() {
 
     private lateinit var viewModel: RateViewModel
-    private val rateAdapter = RateAdapter(emptyList<String>())
+    private val rateAdapter = RateAdapter(emptyList())
 
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
         viewModel = ViewModelProvider(this).get(RateViewModel::class.java)
         viewModel.rates.observe(viewLifecycleOwner, ratesObserver)
@@ -41,8 +39,7 @@ class RateFragment : Fragment() {
 
     private val ratesObserver = Observer<Rate> {
         Log.d("THIS", it.date)
-        rateAdapter.list = listOf("string", "string")
+        rateAdapter.list = it.rates
         rateAdapter.notifyDataSetChanged()
-
     }
 }

@@ -1,7 +1,9 @@
 package com.github.harmittaa.rateconversion.model
 
+import java.io.Serializable
+
 data class Rates(
-    val AUD: Double,
+    /*val AUD: Double,
     val BGN: Double,
     val BRL: Double,
     val CAD: Double,
@@ -32,5 +34,6 @@ data class Rates(
     val THB: Double,
     val TRY: Double,
     val USD: Double,
-    val ZAR: Double
-)
+    val ZAR: Double*/
+    val zar: Double
+) : Serializable

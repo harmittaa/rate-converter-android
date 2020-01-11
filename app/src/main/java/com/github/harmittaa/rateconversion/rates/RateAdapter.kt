@@ -6,8 +6,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.github.harmittaa.rateconversion.R
+import com.github.harmittaa.rateconversion.model.SingleRate
 
-class RateAdapter(var list: List<String>) : RecyclerView.Adapter<RateAdapter.ViewHolder>() {
+class RateAdapter(var list: List<SingleRate>) : RecyclerView.Adapter<RateAdapter.ViewHolder>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -25,9 +26,11 @@ class RateAdapter(var list: List<String>) : RecyclerView.Adapter<RateAdapter.Vie
 
 
     class ViewHolder(private val item: View) : RecyclerView.ViewHolder(item) {
+        private val code: TextView = item.findViewById(R.id.currencyCode)
         private val name: TextView = item.findViewById(R.id.currencyName)
-        fun setItem(item: String) {
-            name.text = item
+        fun setItem(item: SingleRate) {
+            code.text = item.code
+            name.text = "Full name"
         }
     }
 }

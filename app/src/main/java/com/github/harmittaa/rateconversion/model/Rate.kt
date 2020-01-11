@@ -3,9 +3,7 @@ package com.github.harmittaa.rateconversion.model
 data class Rate(
     val base: String,
     val date: String,
-    var rates: Rates
-) {
+    var rates: List<SingleRate>
+)
 
-    init {
-    }
-}
+data class SingleRate(val code: String, val value: Double)
