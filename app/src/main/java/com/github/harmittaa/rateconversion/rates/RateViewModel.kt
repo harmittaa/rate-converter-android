@@ -15,23 +15,23 @@ class RateViewModel : ViewModel(), RateRowListener {
     private var currentRates = listOf<SingleRate>()
 
     fun getRates() {
-        fixedRateTimer("ratesFetcher", false, 0, 1_000) {
+        fixedRateTimer("ratesFetcher", false, 0, 5_000) {
             fetchRates()
         }
     }
 
-    fun fetchRates() {
+    private fun fetchRates() {
         viewModelScope.launch {
             val newRates = repository.getRates(forCurrency = currentRate.code).rates
             newRates.forEach { rate -> rate.exchangedValue = rate.exchangeRate * currentRate.exchangedValue }
             currentRates = newRates
-            rates.value = listOf(currentRate) + newRates
+            currentRate = newRates[0]
+            rates.value = currentRates
         }
     }
 
-    override fun onRowFocused(row: Int) {
-        if (row <= 0) return
-        currentRate = currentRates[row-1]
+    override fun onRowFocused(itemId: Int) {
+        currentRate = currentRates.first { it.id == itemId }
         currentRate.exchangeRate = 1.0
         fetchRates()
     }
@@ -40,7 +40,7 @@ class RateViewModel : ViewModel(), RateRowListener {
         currentRate.exchangedValue = newInput
         viewModelScope.launch {
             currentRates.forEach { rate -> rate.exchangedValue = rate.exchangeRate * newInput }
-            rates.value = listOf(currentRate) + currentRates
+            rates.value = currentRates
         }
     }
 }

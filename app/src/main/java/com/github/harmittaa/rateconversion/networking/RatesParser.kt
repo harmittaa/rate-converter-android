@@ -16,13 +16,26 @@ class RatesParser : JsonDeserializer<Rate> {
         val jsonResponse = json!!.asJsonObject!!
         val ratesObject = jsonResponse.getAsJsonObject("rates")
         val rateEntries = ratesObject.entrySet()
+
+        val baseRateKey = jsonResponse.get("base").asString
+        val baseRateId = resolveId(code = baseRateKey, index = 0)
+        val baseRate = SingleRate(code = jsonResponse.get("base").asString, id = baseRateId, exchangeRate = 1.0, exchangedValue = 0.0, currencyName = Currency.getInstance(baseRateKey).displayName)
+
         val simpleRates = rateEntries.mapIndexed { index, rate ->
-
-            val rateId = if (idMap.containsKey(rate.key)) idMap[rate.key] else index
-            SingleRate(id = rateId!!, code = rate.key, exchangeRate = rate.value.asDouble,
+            val id = resolveId(code = rate.key, index = index)
+            SingleRate(id = id, code = rate.key, exchangeRate = rate.value.asDouble,
             currencyName = Currency.getInstance(rate.key).displayName)
-
         }
-        return Rate(base = jsonResponse.get("base").asString, date = jsonResponse.get("date").asString, rates = simpleRates)
+
+        return Rate(base = jsonResponse.get("base").asString, date = jsonResponse.get("date").asString, rates = listOf(baseRate) + simpleRates)
+    }
+
+    private fun resolveId(code: String, index: Int): Int {
+        if (idMap.containsKey(code)) {
+            return idMap[code]!!
+        }
+
+        idMap[code] = index
+        return index
     }
 }
