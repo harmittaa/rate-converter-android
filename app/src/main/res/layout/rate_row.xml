@@ -32,8 +32,12 @@
     <TextView
         android:id="@+id/currencyName"
         style="@style/SecondaryText"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
+        android:ellipsize="end"
+        android:lines="1"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toStartOf="@+id/guideline"
         app:layout_constraintStart_toStartOf="@+id/currencyCode"
         app:layout_constraintTop_toBottomOf="@+id/currencyCode"
         tools:text="Australian Dollar" />

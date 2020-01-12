@@ -15,7 +15,7 @@ class RateViewModel : ViewModel(), RateRowListener {
     private var currentRates = listOf<SingleRate>()
 
     fun getRates() {
-        fixedRateTimer("ratesFetcher", false, 0, 5_000) {
+        fixedRateTimer("ratesFetcher", false, 0, 1_000) {
             fetchRates()
         }
     }

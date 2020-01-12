@@ -2,7 +2,6 @@ package com.github.harmittaa.rateconversion.rates
 
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,7 +18,7 @@ interface RateRowListener {
 }
 
 interface FocusableListener {
-    fun onEditTextFocused(itemId: Int)
+    fun onRowClicked(itemId: Int)
 }
 
 class RateAdapter(var list: List<SingleRate>) : RecyclerView.Adapter<RateAdapter.ViewHolder>(),
@@ -51,27 +50,30 @@ class RateAdapter(var list: List<SingleRate>) : RecyclerView.Adapter<RateAdapter
         private var itemId = Int.MIN_VALUE
 
         fun setItem(item: SingleRate) {
-            //input.setText(item.exchangedValue.toBigDecimal().setScale(2, RoundingMode.UP).toDouble().toString())
             itemId = item.id
             code.text = item.code
             name.text = item.currencyName
             input.hint = item.exchangedValue.toBigDecimal().setScale(2, RoundingMode.UP).toDouble().toString()
-            input.addTextChangedListener(listener)
+            if (adapterPosition == 0) {
+                input.addTextChangedListener(listener)
+            } else {
+                input.removeTextChangedListener(listener)
+                input.text.clear()
+                input.clearFocus()
+            }
             itemView.setOnClickListener {
-                focusableListener.onEditTextFocused(itemId)
+                focusableListener.onRowClicked(itemId)
             }
         }
     }
 
-    override fun afterTextChanged(editable: Editable?) {
-    }
-
-    override fun onEditTextFocused(itemId: Int) {
+    override fun onRowClicked(itemId: Int) {
         if (currentClickedRow == itemId) return
         currentClickedRow = itemId
         listener.onRowFocused(itemId)
     }
 
+    override fun afterTextChanged(editable: Editable?) {}
     override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) { }
     override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
         if (p0.isNullOrBlank()) return
