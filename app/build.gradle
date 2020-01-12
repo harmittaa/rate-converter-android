@@ -35,17 +35,15 @@ dependencies {
     implementation "androidx.core:core-ktx:$coreKtx"
     implementation "androidx.constraintlayout:constraintlayout:$constraint_layout"
 
-    implementation "com.squareup.retrofit2:retrofit:2.7.1"
+    implementation "com.squareup.retrofit2:retrofit:$retrofit"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit"
+    implementation "com.squareup.okhttp3:logging-interceptor:$rootProject.okhttp_version"
 
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$rootProject.viewmodelktx"
     implementation "androidx.lifecycle:lifecycle-extensions:$rootProject.viewmodelktx"
-
     implementation "androidx.recyclerview:recyclerview:$appCompat"
-
-    implementation "com.squareup.okhttp3:logging-interceptor:$rootProject.okhttp_version"
-
-    implementation 'de.hdodenhof:circleimageview:3.0.1'
+    
+    implementation "de.hdodenhof:circleimageview:$rootProject.circle_image_view"
 
     testImplementation "junit:junit:$junit"
     androidTestImplementation "androidx.test.ext:junit:$androidxJunit"

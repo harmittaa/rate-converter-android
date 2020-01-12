@@ -35,14 +35,9 @@ class RateAdapter(var list: List<SingleRate>) : RecyclerView.Adapter<RateAdapter
     }
 
     override fun getItemCount() = list.count()
+    override fun getItemId(position: Int) = list[position].id.toLong()
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.setItem(list[position])
 
-    override fun getItemId(position: Int): Long {
-        return list[position].id.toLong()
-    }
-
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.setItem(list[position])
-    }
 
     override fun onRowClicked(itemId: Int) {
         if (currentClickedRow == itemId) return
@@ -77,7 +72,6 @@ class RateAdapter(var list: List<SingleRate>) : RecyclerView.Adapter<RateAdapter
                 input.removeTextChangedListener(listener)
                 input.text.clear()
                 input.clearFocus()
-
             }
             itemView.setOnClickListener {
                 focusableListener.onRowClicked(itemId)

@@ -29,6 +29,8 @@ buildscript {
 
         okhttp_version = "4.2.2"
 
+        circle_image_view = "3.0.1"
+
     }
 
     repositories {
