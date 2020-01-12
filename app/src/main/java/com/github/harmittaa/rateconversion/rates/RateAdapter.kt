@@ -22,7 +22,7 @@ interface RateRowListener {
 class RateAdapter(var list: List<SingleRate>) : RecyclerView.Adapter<RateAdapter.ViewHolder>(),
     TextWatcher {
     lateinit var listener: RateRowListener
-    private var currentClickedRow = Int.MAX_VALUE
+    private var currentClickedRow = 0
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val row = LayoutInflater.from(parent.context)
@@ -43,7 +43,8 @@ class RateAdapter(var list: List<SingleRate>) : RecyclerView.Adapter<RateAdapter
 
     override fun onTextChanged(newInput: CharSequence?, p1: Int, p2: Int, p3: Int) {
         if (newInput.isNullOrBlank()) return
-        listener.onInputChanged(newInput.toString().toDouble())
+        val input: Double = try { newInput.toString().toDouble() } catch (e: NumberFormatException) { 0.0 }
+        listener.onInputChanged(input)
     }
 
     override fun afterTextChanged(editable: Editable?) {}
@@ -75,6 +76,8 @@ class RateAdapter(var list: List<SingleRate>) : RecyclerView.Adapter<RateAdapter
             }
             itemView.setOnClickListener {
                 onRowClicked(itemId)
+                input.setText(input.hint.toString())
+                input.requestFocus()
             }
         }
     }
