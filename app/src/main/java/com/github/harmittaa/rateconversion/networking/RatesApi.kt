@@ -1,7 +1,6 @@
 package com.github.harmittaa.networking
 
 import com.github.harmittaa.rateconversion.model.Rate
-import com.github.harmittaa.rateconversion.model.Rates
 import retrofit2.http.GET
 import retrofit2.http.Query
 

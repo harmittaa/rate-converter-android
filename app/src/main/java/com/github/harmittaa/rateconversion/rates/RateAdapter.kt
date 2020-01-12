@@ -12,6 +12,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.github.harmittaa.rateconversion.R
 import com.github.harmittaa.rateconversion.model.SingleRate
+import java.math.RoundingMode
 
 interface RateRowListener {
     fun onInputChanged(newInput: Double, onRow: Int)
@@ -48,10 +49,10 @@ class RateAdapter(var list: List<SingleRate>) : RecyclerView.Adapter<RateAdapter
 
         fun setItem(item: SingleRate) {
             code.text = item.code
-            name.text = item.exchangeRate.toString()
-            input.hint = item.exchangedValue.toString()
+            name.text = item.exchangeRate.toBigDecimal().setScale(2, RoundingMode.UP).toDouble().toString()
+            input.hint = item.exchangedValue.toBigDecimal().setScale(2, RoundingMode.UP).toDouble().toString()
             input.addTextChangedListener(listener)
-            input.setOnFocusChangeListener { view, b ->
+            input.setOnFocusChangeListener { _, _ ->
                 Log.d("TEST", "test")
                 focusableListener.onEditTextFocused(adapterPosition)
             }
