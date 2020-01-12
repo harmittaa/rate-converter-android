@@ -2,10 +2,7 @@ package com.github.harmittaa.rateconversion
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.github.harmittaa.networking.RatesApi
-import com.github.harmittaa.rateconversion.rates.RateFragment
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import com.github.harmittaa.rateconversion.rates.view.RateFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -15,6 +12,7 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.hide()
 
         supportFragmentManager.beginTransaction()
-            .replace(R.id.container, RateFragment(), "rate").commit()
+            .replace(R.id.container,
+                RateFragment(), "rate").commit()
     }
 }

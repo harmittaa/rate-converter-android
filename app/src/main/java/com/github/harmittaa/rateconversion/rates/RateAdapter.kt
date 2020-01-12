@@ -6,10 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.github.harmittaa.rateconversion.R
 import com.github.harmittaa.rateconversion.model.SingleRate
+import com.github.harmittaa.rateconversion.rates.view.Flag
 import java.math.RoundingMode
 
 interface RateRowListener {
@@ -17,12 +19,12 @@ interface RateRowListener {
     fun onRowFocused(itemId: Int)
 }
 
-interface FocusableListener {
+interface RowClickListener {
     fun onRowClicked(itemId: Int)
 }
 
 class RateAdapter(var list: List<SingleRate>) : RecyclerView.Adapter<RateAdapter.ViewHolder>(),
-    TextWatcher, FocusableListener {
+    TextWatcher, RowClickListener {
     lateinit var listener: RateRowListener
     private var currentClickedRow = Int.MAX_VALUE
 
@@ -42,15 +44,30 @@ class RateAdapter(var list: List<SingleRate>) : RecyclerView.Adapter<RateAdapter
         holder.setItem(list[position])
     }
 
+    override fun onRowClicked(itemId: Int) {
+        if (currentClickedRow == itemId) return
+        currentClickedRow = itemId
+        listener.onRowFocused(itemId)
+    }
 
-    class ViewHolder(row: View, private var listener: TextWatcher, private var focusableListener: FocusableListener) : RecyclerView.ViewHolder(row) {
+    override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+        if (p0.isNullOrBlank()) return
+        listener.onInputChanged(p0.toString().toDouble())
+    }
+
+    override fun afterTextChanged(editable: Editable?) {}
+    override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) { }
+
+    class ViewHolder(row: View, private var listener: TextWatcher, private var focusableListener: RowClickListener) : RecyclerView.ViewHolder(row) {
         private val code: TextView = row.findViewById(R.id.currencyCode)
         private val name: TextView = row.findViewById(R.id.currencyName)
         private val input: EditText = row.findViewById(R.id.currencyInput)
+        private val flag: ImageView = row.findViewById(R.id.currencyFlag)
         private var itemId = Int.MIN_VALUE
 
         fun setItem(item: SingleRate) {
             itemId = item.id
+            flag.setImageDrawable(itemView.context.getDrawable(Flag.valueOf(item.code).resourceId))
             code.text = item.code
             name.text = item.currencyName
             input.hint = item.exchangedValue.toBigDecimal().setScale(2, RoundingMode.UP).toDouble().toString()
@@ -60,23 +77,11 @@ class RateAdapter(var list: List<SingleRate>) : RecyclerView.Adapter<RateAdapter
                 input.removeTextChangedListener(listener)
                 input.text.clear()
                 input.clearFocus()
+
             }
             itemView.setOnClickListener {
                 focusableListener.onRowClicked(itemId)
             }
         }
-    }
-
-    override fun onRowClicked(itemId: Int) {
-        if (currentClickedRow == itemId) return
-        currentClickedRow = itemId
-        listener.onRowFocused(itemId)
-    }
-
-    override fun afterTextChanged(editable: Editable?) {}
-    override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) { }
-    override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-        if (p0.isNullOrBlank()) return
-        listener.onInputChanged(p0.toString().toDouble())
     }
 }
