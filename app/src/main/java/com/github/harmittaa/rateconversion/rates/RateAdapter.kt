@@ -19,41 +19,38 @@ interface RateRowListener {
     fun onRowFocused(itemId: Int)
 }
 
-interface RowClickListener {
-    fun onRowClicked(itemId: Int)
-}
-
 class RateAdapter(var list: List<SingleRate>) : RecyclerView.Adapter<RateAdapter.ViewHolder>(),
-    TextWatcher, RowClickListener {
+    TextWatcher {
     lateinit var listener: RateRowListener
     private var currentClickedRow = Int.MAX_VALUE
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val row = LayoutInflater.from(parent.context)
             .inflate(R.layout.rate_row, parent, false) as View
-        return ViewHolder(row, this, this)
+        return ViewHolder(row, this)
     }
 
     override fun getItemCount() = list.count()
     override fun getItemId(position: Int) = list[position].id.toLong()
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.setItem(list[position])
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) =
+        holder.setItem(list[position])
 
-
-    override fun onRowClicked(itemId: Int) {
+    fun onRowClicked(itemId: Int) {
         if (currentClickedRow == itemId) return
         currentClickedRow = itemId
         listener.onRowFocused(itemId)
     }
 
-    override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-        if (p0.isNullOrBlank()) return
-        listener.onInputChanged(p0.toString().toDouble())
+    override fun onTextChanged(newInput: CharSequence?, p1: Int, p2: Int, p3: Int) {
+        if (newInput.isNullOrBlank()) return
+        listener.onInputChanged(newInput.toString().toDouble())
     }
 
     override fun afterTextChanged(editable: Editable?) {}
-    override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) { }
+    override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
-    class ViewHolder(row: View, private var listener: TextWatcher, private var focusableListener: RowClickListener) : RecyclerView.ViewHolder(row) {
+    inner class ViewHolder(row: View, private var listener: TextWatcher) :
+        RecyclerView.ViewHolder(row) {
         private val code: TextView = row.findViewById(R.id.currencyCode)
         private val name: TextView = row.findViewById(R.id.currencyName)
         private val input: EditText = row.findViewById(R.id.currencyInput)
@@ -65,7 +62,9 @@ class RateAdapter(var list: List<SingleRate>) : RecyclerView.Adapter<RateAdapter
             flag.setImageDrawable(itemView.context.getDrawable(Flag.valueOf(item.code).resourceId))
             code.text = item.code
             name.text = item.currencyName
-            input.hint = item.exchangedValue.toBigDecimal().setScale(2, RoundingMode.UP).toDouble().toString()
+            input.hint = item.exchangedValue.toBigDecimal().setScale(2, RoundingMode.UP).toDouble()
+                .toString()
+
             if (adapterPosition == 0) {
                 input.addTextChangedListener(listener)
             } else {
@@ -74,7 +73,7 @@ class RateAdapter(var list: List<SingleRate>) : RecyclerView.Adapter<RateAdapter
                 input.clearFocus()
             }
             itemView.setOnClickListener {
-                focusableListener.onRowClicked(itemId)
+                onRowClicked(itemId)
             }
         }
     }
