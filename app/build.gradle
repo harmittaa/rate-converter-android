@@ -42,8 +42,6 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$rootProject.viewmodelktx"
     implementation "androidx.lifecycle:lifecycle-extensions:$rootProject.viewmodelktx"
     implementation "androidx.recyclerview:recyclerview:$appCompat"
-    
-    implementation "de.hdodenhof:circleimageview:$rootProject.circle_image_view"
 
     testImplementation "junit:junit:$junit"
     androidTestImplementation "androidx.test.ext:junit:$androidxJunit"

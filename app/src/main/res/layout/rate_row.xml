@@ -7,7 +7,7 @@
     android:layout_height="72dp"
     android:background="@color/primaryWhite">
 
-    <de.hdodenhof.circleimageview.CircleImageView
+    <ImageView
         android:id="@+id/currencyFlag"
         android:layout_width="40dp"
         android:layout_height="40dp"
@@ -17,6 +17,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        android:scaleType="centerCrop"
+        android:background="@drawable/rounded_corner_image"
         app:srcCompat="@drawable/eu" />
 
     <TextView

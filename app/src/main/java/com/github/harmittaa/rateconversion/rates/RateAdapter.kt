@@ -59,6 +59,7 @@ class RateAdapter(var list: List<SingleRate>) : RecyclerView.Adapter<RateAdapter
 
         fun setItem(item: SingleRate) {
             itemId = item.id
+            flag.clipToOutline = true
             flag.setImageDrawable(itemView.context.getDrawable(Flag.valueOf(item.code).resourceId))
             code.text = item.code
             name.text = item.currencyName
