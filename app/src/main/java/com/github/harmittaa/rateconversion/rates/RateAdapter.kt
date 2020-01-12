@@ -15,7 +15,7 @@ import com.github.harmittaa.rateconversion.model.SingleRate
 import java.math.RoundingMode
 
 interface RateRowListener {
-    fun onInputChanged(newInput: Double, onRow: Int)
+    fun onInputChanged(newInput: Double)
     fun onRowFocused(row: Int)
 }
 
@@ -49,7 +49,7 @@ class RateAdapter(var list: List<SingleRate>) : RecyclerView.Adapter<RateAdapter
 
         fun setItem(item: SingleRate) {
             code.text = item.code
-            name.text = item.exchangeRate.toBigDecimal().setScale(2, RoundingMode.UP).toDouble().toString()
+            name.text = item.currencyName
             input.hint = item.exchangedValue.toBigDecimal().setScale(2, RoundingMode.UP).toDouble().toString()
             input.addTextChangedListener(listener)
             input.setOnFocusChangeListener { _, _ ->
@@ -61,7 +61,7 @@ class RateAdapter(var list: List<SingleRate>) : RecyclerView.Adapter<RateAdapter
 
     override fun afterTextChanged(editable: Editable?) {
         if (editable.isNullOrBlank()) return
-        listener.onInputChanged(editable.toString().toDouble(), currentClickedRow)
+        listener.onInputChanged(editable.toString().toDouble())
     }
 
     override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {

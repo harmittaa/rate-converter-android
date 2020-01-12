@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rowBackground"
     android:layout_width="match_parent"
-    android:layout_height="72dp">
+    android:layout_height="72dp"
+    android:background="@color/primaryWhite">
 
     <ImageView
         android:id="@+id/currencyFlag"
@@ -19,6 +20,7 @@
 
     <TextView
         android:id="@+id/currencyCode"
+        style="@style/PrimaryText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -28,6 +30,7 @@
 
     <TextView
         android:id="@+id/currencyName"
+        style="@style/SecondaryText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Euro"
@@ -36,8 +39,9 @@
 
     <EditText
         android:id="@+id/currencyInput"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
         android:layout_marginTop="21dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="23dp"
@@ -46,11 +50,7 @@
         android:inputType="numberDecimal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/currencyName"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <View
-        android:id="@+id/clickView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
