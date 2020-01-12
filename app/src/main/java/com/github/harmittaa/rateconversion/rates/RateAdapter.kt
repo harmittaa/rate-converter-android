@@ -37,7 +37,7 @@ class RateAdapter(var list: List<SingleRate>) : RecyclerView.Adapter<RateAdapter
     override fun getItemCount() = list.count()
 
     override fun getItemId(position: Int): Long {
-        return super.getItemId(position)
+        return list[position].id.toLong()
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
