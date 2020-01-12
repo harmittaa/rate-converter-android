@@ -27,6 +27,8 @@ buildscript {
 
         viewmodelktx = "2.2.0-rc03"
 
+        okhttp_version = "4.2.2"
+
     }
 
     repositories {
