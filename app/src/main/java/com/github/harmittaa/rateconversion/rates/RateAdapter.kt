@@ -48,9 +48,10 @@ class RateAdapter(var list: List<SingleRate>) : RecyclerView.Adapter<RateAdapter
         private val code: TextView = row.findViewById(R.id.currencyCode)
         private val name: TextView = row.findViewById(R.id.currencyName)
         private val input: EditText = row.findViewById(R.id.currencyInput)
-        var itemId = Int.MIN_VALUE
+        private var itemId = Int.MIN_VALUE
 
         fun setItem(item: SingleRate) {
+            //input.setText(item.exchangedValue.toBigDecimal().setScale(2, RoundingMode.UP).toDouble().toString())
             itemId = item.id
             code.text = item.code
             name.text = item.currencyName
@@ -63,8 +64,6 @@ class RateAdapter(var list: List<SingleRate>) : RecyclerView.Adapter<RateAdapter
     }
 
     override fun afterTextChanged(editable: Editable?) {
-        if (editable.isNullOrBlank()) return
-        listener.onInputChanged(editable.toString().toDouble())
     }
 
     override fun onEditTextFocused(itemId: Int) {
@@ -74,5 +73,8 @@ class RateAdapter(var list: List<SingleRate>) : RecyclerView.Adapter<RateAdapter
     }
 
     override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) { }
-    override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) { }
+    override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+        if (p0.isNullOrBlank()) return
+        listener.onInputChanged(p0.toString().toDouble())
+    }
 }
