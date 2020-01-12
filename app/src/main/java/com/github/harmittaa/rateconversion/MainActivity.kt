@@ -12,7 +12,9 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.hide()
 
         supportFragmentManager.beginTransaction()
-            .replace(R.id.container,
-                RateFragment(), "rate").commit()
+            .replace(
+                R.id.container,
+                RateFragment(), "rate"
+            ).commit()
     }
 }

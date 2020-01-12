@@ -15,11 +15,8 @@ import com.github.harmittaa.rateconversion.rates.RateViewModel
 import kotlinx.android.synthetic.main.fragment_rate.*
 
 class RateFragment : Fragment() {
-
     private lateinit var viewModel: RateViewModel
-    private val rateAdapter =
-        RateAdapter(emptyList())
-
+    private val rateAdapter = RateAdapter(emptyList())
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)

@@ -22,7 +22,7 @@ interface RateRowListener {
 class RateAdapter(var list: List<SingleRate>) : RecyclerView.Adapter<RateAdapter.ViewHolder>(),
     TextWatcher {
     lateinit var listener: RateRowListener
-    private var currentClickedRow = 0
+    private var selectedRowId = 0
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val row = LayoutInflater.from(parent.context)
@@ -30,22 +30,26 @@ class RateAdapter(var list: List<SingleRate>) : RecyclerView.Adapter<RateAdapter
         return ViewHolder(row, this)
     }
 
-    override fun getItemCount() = list.count()
-    override fun getItemId(position: Int) = list[position].id.toLong()
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) =
-        holder.setItem(list[position])
-
     fun onRowClicked(itemId: Int) {
-        if (currentClickedRow == itemId) return
-        currentClickedRow = itemId
+        if (selectedRowId == itemId) return
+        selectedRowId = itemId
         listener.onRowFocused(itemId)
     }
 
     override fun onTextChanged(newInput: CharSequence?, p1: Int, p2: Int, p3: Int) {
         if (newInput.isNullOrBlank()) return
-        val input: Double = try { newInput.toString().toDouble() } catch (e: NumberFormatException) { 0.0 }
+        val input: Double = try {
+            newInput.toString().toDouble()
+        } catch (e: NumberFormatException) {
+            0.0
+        }
         listener.onInputChanged(input)
     }
+
+    override fun getItemCount() = list.count()
+    override fun getItemId(position: Int) = list[position].id.toLong()
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) =
+        holder.setItem(list[position])
 
     override fun afterTextChanged(editable: Editable?) {}
     override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
@@ -67,7 +71,10 @@ class RateAdapter(var list: List<SingleRate>) : RecyclerView.Adapter<RateAdapter
             input.hint = item.exchangedValue.toBigDecimal().setScale(2, RoundingMode.UP).toDouble()
                 .toString()
 
-            if (adapterPosition == 0) {
+            // listen to changes only on the first position
+            // allows input in other positions, but doesn't react != good UX
+            // to be done in ticket-N+1
+            if (adapterPosition == 0 && itemId == selectedRowId) {
                 input.addTextChangedListener(listener)
             } else {
                 input.removeTextChangedListener(listener)
