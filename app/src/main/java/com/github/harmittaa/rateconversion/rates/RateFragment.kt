@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.SimpleItemAnimator
 import com.github.harmittaa.rateconversion.R
 import com.github.harmittaa.rateconversion.model.Rate
 import com.github.harmittaa.rateconversion.model.SingleRate
@@ -30,6 +31,7 @@ class RateFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         rateAdapter.listener = viewModel
+        rateAdapter.setHasStableIds(true)
         ratesList.apply {
             layoutManager = LinearLayoutManager(this@RateFragment.context)
             adapter = rateAdapter
