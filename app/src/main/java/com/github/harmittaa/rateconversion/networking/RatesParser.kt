@@ -22,12 +22,13 @@ class RatesParser : JsonDeserializer<Rate> {
         val baseRate = SingleRate(code = jsonResponse.get("base").asString, id = baseRateId, exchangeRate = 1.0, exchangedValue = 0.0, currencyName = Currency.getInstance(baseRateKey).displayName)
 
         val simpleRates = rateEntries.mapIndexed { index, rate ->
-            val id = resolveId(code = rate.key, index = index)
+            val idx = index + 1
+            val id = resolveId(code = rate.key, index = idx)
             SingleRate(id = id, code = rate.key, exchangeRate = rate.value.asDouble,
             currencyName = Currency.getInstance(rate.key).displayName)
         }
-
-        return Rate(base = jsonResponse.get("base").asString, date = jsonResponse.get("date").asString, rates = listOf(baseRate) + simpleRates)
+        val rate = Rate(base = jsonResponse.get("base").asString, date = jsonResponse.get("date").asString, rates = listOf(baseRate) + simpleRates)
+        return rate
     }
 
     private fun resolveId(code: String, index: Int): Int {

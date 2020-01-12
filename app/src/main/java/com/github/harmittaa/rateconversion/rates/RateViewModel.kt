@@ -11,7 +11,7 @@ import kotlin.concurrent.fixedRateTimer
 class RateViewModel : ViewModel(), RateRowListener {
     private val repository = RatesRepository()
     val rates = MutableLiveData<List<SingleRate>>()
-    private var currentRate = SingleRate(id = 0, code = "EUR", exchangeRate = 1.0, currencyName = "Euro")
+    private var currentRate: SingleRate? = null
     private var currentRates = listOf<SingleRate>()
 
     fun getRates() {
@@ -22,8 +22,9 @@ class RateViewModel : ViewModel(), RateRowListener {
 
     private fun fetchRates() {
         viewModelScope.launch {
-            val newRates = repository.getRates(forCurrency = currentRate.code).rates
-            newRates.forEach { rate -> rate.exchangedValue = rate.exchangeRate * currentRate.exchangedValue }
+            val newRates = repository.getRates(forCurrency = currentRate?.code ?: "EUR").rates
+            newRates.forEach { rate -> rate.exchangedValue = rate.exchangeRate * (currentRate?.exchangedValue
+                ?: 0.0) }
             currentRates = newRates
             currentRate = newRates[0]
             rates.value = currentRates
@@ -32,12 +33,12 @@ class RateViewModel : ViewModel(), RateRowListener {
 
     override fun onRowFocused(itemId: Int) {
         currentRate = currentRates.first { it.id == itemId }
-        currentRate.exchangeRate = 1.0
+        currentRate!!.exchangeRate = 1.0
         fetchRates()
     }
 
     override fun onInputChanged(newInput: Double) {
-        currentRate.exchangedValue = newInput
+        currentRate!!.exchangedValue = newInput
         viewModelScope.launch {
             currentRates.forEach { rate -> rate.exchangedValue = rate.exchangeRate * newInput }
             rates.value = currentRates

@@ -57,7 +57,7 @@ class RateAdapter(var list: List<SingleRate>) : RecyclerView.Adapter<RateAdapter
             name.text = item.currencyName
             input.hint = item.exchangedValue.toBigDecimal().setScale(2, RoundingMode.UP).toDouble().toString()
             input.addTextChangedListener(listener)
-            input.setOnFocusChangeListener { _, _ ->
+            itemView.setOnClickListener {
                 focusableListener.onEditTextFocused(itemId)
             }
         }
