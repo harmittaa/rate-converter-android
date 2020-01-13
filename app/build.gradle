@@ -48,6 +48,12 @@ dependencies {
     implementation "org.koin:koin-androidx-viewmodel:$rootProject.koinVersion"
 
     testImplementation "junit:junit:$junit"
+    testImplementation "org.mockito:mockito-core:$rootProject.mockitoVersion"
+    testImplementation "org.mockito:mockito-inline:$rootProject.mockitoVersion"
+    testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$rootProject.mockitoKotlin"
+    testImplementation "android.arch.core:core-testing:$rootProject.coreTesting"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$rootProject.kotlinxCoroutinesTest"
+
     androidTestImplementation "androidx.test.ext:junit:$androidxJunit"
     androidTestImplementation "androidx.test.espresso:espresso-core:$espressoCore"
 
