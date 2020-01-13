@@ -74,18 +74,21 @@ class RateAdapter(var list: List<SingleRate>) : RecyclerView.Adapter<RateAdapter
             // listen to changes only on the first position
             // allows input in other positions, but doesn't react != good UX
             // to be done in ticket-N+1
-            if (adapterPosition == 0 && itemId == selectedRowId) {
+            if (isFirstRow()) {
                 input.addTextChangedListener(listener)
             } else {
                 input.removeTextChangedListener(listener)
                 input.text.clear()
                 input.clearFocus()
             }
+
             itemView.setOnClickListener {
                 onRowClicked(itemId)
                 input.setText(input.hint.toString())
                 input.requestFocus()
             }
         }
+
+        private fun isFirstRow() = adapterPosition == 0 && itemId == selectedRowId
     }
 }

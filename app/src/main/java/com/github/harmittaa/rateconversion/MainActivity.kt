@@ -1,7 +1,7 @@
 package com.github.harmittaa.rateconversion
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import com.github.harmittaa.rateconversion.rates.view.RateFragment
 
 class MainActivity : AppCompatActivity() {

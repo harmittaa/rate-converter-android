@@ -12,6 +12,7 @@ import kotlinx.coroutines.launch
 import kotlin.concurrent.fixedRateTimer
 
 class RateViewModel : ViewModel(), RateRowListener {
+    private val rateFetchingPeriod = 1_000L
     private val repository = RatesRepository()
     private var currentRate: SingleRate? = null
     private var currentRates = listOf<SingleRate>()
@@ -21,7 +22,7 @@ class RateViewModel : ViewModel(), RateRowListener {
         get() = _rates
 
     fun getRates() {
-        fixedRateTimer("ratesFetcher", false, 0, 1_000) {
+        fixedRateTimer("ratesFetcher", false, 0, rateFetchingPeriod) {
             fetchRates()
         }
     }

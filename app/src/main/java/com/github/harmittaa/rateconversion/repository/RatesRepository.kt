@@ -3,7 +3,6 @@ package com.github.harmittaa.rateconversion.repository
 import com.github.harmittaa.networking.RetrofitProvider
 import com.github.harmittaa.rateconversion.model.Rate
 import com.github.harmittaa.rateconversion.networking.Resource
-import java.lang.Exception
 
 class RatesRepository {
     private var networkProvider = RetrofitProvider()
