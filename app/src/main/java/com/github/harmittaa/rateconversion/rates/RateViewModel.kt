@@ -1,6 +1,7 @@
 package com.github.harmittaa.rateconversion.rates
 
 import android.util.Log
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -8,11 +9,15 @@ import androidx.lifecycle.viewModelScope
 import com.github.harmittaa.rateconversion.model.SingleRate
 import com.github.harmittaa.rateconversion.networking.Status
 import com.github.harmittaa.rateconversion.repository.RatesRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.util.*
 import kotlin.concurrent.fixedRateTimer
 
 class RateViewModel(private val repository: RatesRepository) : ViewModel(), RateRowListener {
-    private val rateFetchingPeriod = 1_000L
+    @VisibleForTesting val defaultCurrency = "EUR"
+    @VisibleForTesting var rateFetchingPeriod = 1_000L
+    private lateinit var timer: Timer
     private var currentRate: SingleRate? = null
     private var currentRates = listOf<SingleRate>()
 
@@ -20,16 +25,20 @@ class RateViewModel(private val repository: RatesRepository) : ViewModel(), Rate
     val rates: LiveData<List<SingleRate>>
         get() = _rates
 
-    fun getRates() {
-        fixedRateTimer("ratesFetcher", false, 0, rateFetchingPeriod) {
+    fun startRateUpdates() {
+        timer = fixedRateTimer("ratesFetcher", false, 0, rateFetchingPeriod) {
             fetchRates()
         }
     }
 
+    fun stopRateUpdates() {
+        timer.cancel()
+    }
+
     private fun fetchRates() {
-        viewModelScope.launch {
+        viewModelScope.launch(context = Dispatchers.IO) {
             // default to EUR for the first request
-            val newRates = repository.getRates(currency = currentRate?.code ?: "EUR")
+            val newRates = repository.getRates(currency = currentRate?.code ?: defaultCurrency)
             when (newRates.status) {
                 Status.ERROR -> Log.e("VM", "Request failed $newRates.message")
                 else -> handleSuccess(newRates.data!!.rates)
@@ -44,7 +53,7 @@ class RateViewModel(private val repository: RatesRepository) : ViewModel(), Rate
         }
         currentRates = rates
         currentRate = rates[0]
-        _rates.value = currentRates
+        _rates.postValue(currentRates)
     }
 
     override fun onRowFocused(itemId: Int) {
@@ -55,9 +64,9 @@ class RateViewModel(private val repository: RatesRepository) : ViewModel(), Rate
 
     override fun onInputChanged(newInput: Double) {
         currentRate?.exchangedValue = newInput
-        viewModelScope.launch {
+        viewModelScope.launch(context = Dispatchers.Default) {
             currentRates.forEach { rate -> rate.exchangedValue = rate.exchangeRate * newInput }
-            _rates.value = currentRates
+            _rates.postValue(currentRates)
         }
     }
 }

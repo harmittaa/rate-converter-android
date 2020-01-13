@@ -32,7 +32,16 @@ class RateFragment : Fragment() {
             layoutManager = LinearLayoutManager(this@RateFragment.context)
             adapter = rateAdapter
         }
-        viewModel.getRates()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.startRateUpdates()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        viewModel.stopRateUpdates()
     }
 
     private val ratesObserver = Observer<List<SingleRate>> {
