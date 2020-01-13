@@ -50,12 +50,12 @@ class RateViewModel : ViewModel(), RateRowListener {
 
     override fun onRowFocused(itemId: Int) {
         currentRate = currentRates.first { it.id == itemId }
-        currentRate!!.exchangeRate = 1.0
+        currentRate?.exchangeRate = 1.0
         fetchRates()
     }
 
     override fun onInputChanged(newInput: Double) {
-        currentRate!!.exchangedValue = newInput
+        currentRate?.exchangedValue = newInput
         viewModelScope.launch {
             currentRates.forEach { rate -> rate.exchangedValue = rate.exchangeRate * newInput }
             _rates.value = currentRates

@@ -5,6 +5,7 @@ import com.github.harmittaa.rateconversion.model.SingleRate
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
+import java.lang.IllegalArgumentException
 import java.lang.reflect.Type
 import java.util.*
 
@@ -13,7 +14,9 @@ class RatesParser : JsonDeserializer<Rate> {
 
     // JSON response doesn't contain a list of rates, so the response is converted here
     override fun deserialize(json: JsonElement?, typeOfT: Type?, context: JsonDeserializationContext?): Rate {
-        val jsonResponse = json!!.asJsonObject!!
+        if (json == null || json.asJsonObject == null) throw IllegalArgumentException("Invalid JSON, cannot deserialize")
+
+        val jsonResponse = json.asJsonObject
         val ratesObject = jsonResponse.getAsJsonObject("rates")
         val rateEntries = ratesObject.entrySet()
 
