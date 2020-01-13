@@ -11,9 +11,8 @@ import com.github.harmittaa.rateconversion.repository.RatesRepository
 import kotlinx.coroutines.launch
 import kotlin.concurrent.fixedRateTimer
 
-class RateViewModel : ViewModel(), RateRowListener {
+class RateViewModel(private val repository: RatesRepository) : ViewModel(), RateRowListener {
     private val rateFetchingPeriod = 1_000L
-    private val repository = RatesRepository()
     private var currentRate: SingleRate? = null
     private var currentRates = listOf<SingleRate>()
 
@@ -30,7 +29,7 @@ class RateViewModel : ViewModel(), RateRowListener {
     private fun fetchRates() {
         viewModelScope.launch {
             // default to EUR for the first request
-            val newRates = repository.getRates(forCurrency = currentRate?.code ?: "EUR")
+            val newRates = repository.getRates(currency = currentRate?.code ?: "EUR")
             when (newRates.status) {
                 Status.ERROR -> Log.e("VM", "Request failed $newRates.message")
                 else -> handleSuccess(newRates.data!!.rates)

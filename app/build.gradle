@@ -43,6 +43,10 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-extensions:$rootProject.viewmodelktx"
     implementation "androidx.recyclerview:recyclerview:$appCompat"
 
+    implementation "org.koin:koin-android:$rootProject.koinVersion"
+    implementation "org.koin:koin-core:$rootProject.koinVersion"
+    implementation "org.koin:koin-androidx-viewmodel:$rootProject.koinVersion"
+
     testImplementation "junit:junit:$junit"
     androidTestImplementation "androidx.test.ext:junit:$androidxJunit"
     androidTestImplementation "androidx.test.espresso:espresso-core:$espressoCore"
