@@ -14,11 +14,6 @@ import com.github.harmittaa.rateconversion.model.SingleRate
 import com.github.harmittaa.rateconversion.rates.view.Flag
 import java.math.RoundingMode
 
-interface RateRowListener {
-    fun onInputChanged(newInput: Double)
-    fun onRowFocused(itemId: Int)
-}
-
 class RateAdapter(var list: List<SingleRate>) : RecyclerView.Adapter<RateAdapter.ViewHolder>(),
     TextWatcher {
     lateinit var listener: RateRowListener
